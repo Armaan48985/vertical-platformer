@@ -61,23 +61,6 @@ const keys = {
   },
 };
 
-class Sprite {
-  constructor({ position, imageSrc }) {
-    this.position = position;
-    this.image = new Image();
-    this.image.src = imageSrc;
-  }
-
-  draw() {
-    if (!this.image) return;
-    c.drawImage(this.image, this.position.x, this.position.y);
-  }
-
-  update() {
-    this.draw();
-  }
-}
-
 const background = new Sprite({
   position: {
     x: 0,
@@ -86,36 +69,14 @@ const background = new Sprite({
   imageSrc: "./background.png",
 });
 
-class Player {
-  constructor(position) {
-    this.position = position;
-    this.velocity = {
-      x: 0,
-      y: 1,
-    };
-    this.height = 100;
-  }
-
-  draw() {
-    c.fillStyle = "red";
-    c.fillRect(this.position.x, this.position.y, 100, this.height);
-  }
-
-  update() {
-    player.draw();
-    this.position.y += this.velocity.y;
-    this.position.x += this.velocity.x;
-    if (this.position.y + this.height + this.velocity.y < canvas.height) {
-      this.velocity.y += gravity;
-    } else {
-      this.velocity.y = 0;
-    }
-  }
-}
-
 const player = new Player({
-  x: 0,
-  y: 0,
+  position: {
+    x: 100,
+    y: 0,
+  },
+  collisionBlocks,
+  imageSrc: "/warrior/warrior/Idle.png",
+  frameRate: 8,
 });
 
 let y = 100;
@@ -133,15 +94,14 @@ function animate() {
     collisionBlock.update();
   });
   platformCollisionBlocks.forEach((collisionBlock) => {
-    collisionBlock.update();``
+    collisionBlock.update();
   });
-  c.restore();
-
   player.update();
 
   player.velocity.x = 0;
   if (keys.d.keypressed) player.velocity.x = 1;
   else if (keys.a.keypressed) player.velocity.x = -1;
+  c.restore();
 }
 
 animate();
@@ -155,7 +115,7 @@ window.addEventListener("keydown", (event) => {
       keys.a.keypressed = true;
       break;
     case "w":
-      player.velocity.y = -20;
+      player.velocity.y = -8;
       break;
   }
 });
